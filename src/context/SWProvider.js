@@ -5,6 +5,7 @@ import SWContext from './SWContext';
 function SWProvider(props) {
   const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
   const [data, setData] = useState([]);
+  const [filterByName, setFilterByName] = useState('');
 
   useEffect(() => {
     const getData = async () => {
@@ -21,6 +22,9 @@ function SWProvider(props) {
       <Provider
         value={ {
           data,
+          setData,
+          filterByName,
+          setFilterByName,
         } }
       >
         {children}

@@ -2,14 +2,37 @@ import React, { useContext } from 'react';
 import SWContext from '../context/SWContext';
 
 function Table() {
-  const { data } = useContext(SWContext);
+  const { data, filterByName, setFilterByName } = useContext(SWContext);
   console.log(data);
-  //   const tableHeadNames = data[0];
-  //   const tableHead = Object.keys(tableHeadNames).filter((e) => e !== 'residents');
+
+  //   useEffect(() => {
+  //     if (filterByName !== '') {
+  //       const filteredData = data.filter((search) => search.name.includes(filterByName));
+  //       setData(filteredData);
+  //     } else {
+  //       setData(data);
+  //     }
+  //     return data;
+  //   }, [filterByName]);
+
+  const filtered = !filterByName
+    ? data
+    : data.filter((search) => search.name.includes(filterByName));
 
   return (
     <div>
-
+      <div className="filter-bar">
+        <label htmlFor="name-filter">
+          Filtro:
+          <input
+            type="text"
+            name="name-filter"
+            value={ filterByName.name }
+            data-testid="name-filter"
+            onChange={ ({ target }) => setFilterByName(target.value) }
+          />
+        </label>
+      </div>
       <table>
         <tr>
           <th>Name</th>
@@ -27,7 +50,7 @@ function Table() {
           <th>URL</th>
         </tr>
         {
-          data.map((a) => (
+          filtered.map((a) => (
             <tbody key={ a.name }>
               <tr>
                 <td>{ a.name }</td>
