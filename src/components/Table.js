@@ -1,37 +1,110 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import SWContext from '../context/SWContext';
 
 function Table() {
-  const { data, filterByName, setFilterByName } = useContext(SWContext);
-  console.log(data);
+  const {
+    data,
+    filterByName,
+    setFilterByName,
+    filterByNumericValues,
+    setFilterByNumericValues,
+  } = useContext(SWContext);
+  //   console.log(data);
 
-  //   useEffect(() => {
-  //     if (filterByName !== '') {
-  //       const filteredData = data.filter((search) => search.name.includes(filterByName));
-  //       setData(filteredData);
-  //     } else {
-  //       setData(data);
-  //     }
-  //     return data;
-  //   }, [filterByName]);
+  const [filterParam, setFilterParam] = useState(
+    {
+      column: 'population',
+      comparison: 'maior que',
+      value: 0,
+    },
+  );
 
-  const filtered = !filterByName
-    ? data
-    : data.filter((search) => search.name.includes(filterByName));
+  const [btn, setBtn] = useState(false);
+
+  const filtered = data
+    .filter((search) => search.name.includes(filterByName))
+    .filter((planet) => filterByNumericValues.every(({ column, comparison, value }) => {
+      if (btn && comparison === 'menor que') {
+        setBtn(false);
+        return Number(planet[column]) < Number(value);
+      } if (btn && comparison === 'maior que') {
+        return Number(planet[column]) > Number(value);
+      } if (btn && comparison === 'igual a') {
+        return Number(planet[column]) === Number(value);
+      }
+      return data;
+    }));
+
+  //   console.log(filterByNumericValues);
+  //   console.log(filterParam);
+
+  const handleBtn = () => {
+    setBtn(true);
+    setFilterByNumericValues([
+      ...filterByNumericValues,
+      filterParam,
+    ]);
+  };
 
   return (
     <div>
       <div className="filter-bar">
         <label htmlFor="name-filter">
-          Filtro:
+          Filtre por nome:
           <input
             type="text"
             name="name-filter"
-            value={ filterByName.name }
+            value={ filterByName }
             data-testid="name-filter"
             onChange={ ({ target }) => setFilterByName(target.value) }
           />
         </label>
+
+        <select
+          data-testid="column-filter"
+          value={ filterParam.column }
+          onChange={ ({ target }) => setFilterParam({
+            ...filterParam,
+            column: target.value,
+          }) }
+        >
+          <option value="population">population</option>
+          <option value="orbital_period">orbital_period</option>
+          <option value="diameter">diameter</option>
+          <option value="rotation_period">rotation_period</option>
+          <option value="surface_water">surface_water</option>
+        </select>
+
+        <select
+          data-testid="comparison-filter"
+          value={ filterParam.comparison }
+          onChange={ ({ target }) => setFilterParam({
+            ...filterParam,
+            comparison: target.value,
+          }) }
+        >
+          <option value="maior que">maior que</option>
+          <option value="menor que">menor que</option>
+          <option value="igual a">igual a</option>
+        </select>
+
+        <input
+          type="number"
+          data-testid="value-filter"
+          value={ filterParam.value }
+          onChange={ ({ target }) => setFilterParam({
+            ...filterParam,
+            value: Number(target.value),
+          }) }
+        />
+
+        <button
+          type="button"
+          data-testid="button-filter"
+          onClick={ handleBtn }
+        >
+          Filtrar
+        </button>
       </div>
       <table>
         <tr>

@@ -4,8 +4,16 @@ import SWContext from './SWContext';
 
 function SWProvider(props) {
   const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
+
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
+  const [filterByNumericValues, setFilterByNumericValues] = useState([
+    {
+      column: 'population',
+      comparison: 'maior que',
+      value: 0,
+    },
+  ]);
 
   useEffect(() => {
     const getData = async () => {
@@ -25,6 +33,8 @@ function SWProvider(props) {
           setData,
           filterByName,
           setFilterByName,
+          filterByNumericValues,
+          setFilterByNumericValues,
         } }
       >
         {children}
