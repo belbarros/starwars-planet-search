@@ -15,7 +15,7 @@ function Table() {
     {
       column: 'population',
       comparison: 'maior que',
-      value: 0,
+      value: '0',
     },
   );
 
@@ -25,7 +25,6 @@ function Table() {
     .filter((search) => search.name.includes(filterByName))
     .filter((planet) => filterByNumericValues.every(({ column, comparison, value }) => {
       if (btn && comparison === 'menor que') {
-        setBtn(false);
         return Number(planet[column]) < Number(value);
       } if (btn && comparison === 'maior que') {
         return Number(planet[column]) > Number(value);
@@ -34,9 +33,6 @@ function Table() {
       }
       return data;
     }));
-
-  //   console.log(filterByNumericValues);
-  //   console.log(filterParam);
 
   const handleBtn = () => {
     setBtn(true);
@@ -89,7 +85,7 @@ function Table() {
         </select>
 
         <input
-          type="number"
+          type="text"
           data-testid="value-filter"
           value={ filterParam.value }
           onChange={ ({ target }) => setFilterParam({

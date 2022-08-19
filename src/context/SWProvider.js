@@ -7,13 +7,7 @@ function SWProvider(props) {
 
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
-  const [filterByNumericValues, setFilterByNumericValues] = useState([
-    {
-      column: 'population',
-      comparison: 'maior que',
-      value: 0,
-    },
-  ]);
+  const [filterByNumericValues, setFilterByNumericValues] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
