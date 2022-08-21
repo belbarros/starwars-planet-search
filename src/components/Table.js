@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SWContext from '../context/SWContext';
 
 function Table() {
@@ -11,15 +11,12 @@ function Table() {
   } = useContext(SWContext);
   //   console.log(data);
 
-  // const filterOptions = ['population', 'orbital_period', 'diameter',
-  // 'rotation_period', 'surface_water'];
-
   const [filterOptions, setFilterOptions] = useState(['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
 
   const [filterParam, setFilterParam] = useState(
     {
-      column: 'population',
+      column: filterOptions[0],
       comparison: 'maior que',
       value: '0',
     },
@@ -42,13 +39,26 @@ function Table() {
 
   const handleBtn = () => {
     setBtn(true);
+
     setFilterByNumericValues([
       ...filterByNumericValues,
       filterParam,
     ]);
+
     setFilterOptions(filterOptions.filter((option) => filterParam.column !== option));
-    // console.log(filterOptions);
+    console.log(filterOptions);
+    // setFilterParam({
+    //   ...filterParam,
+    //   column: filterOptions[0],
+    // });
   };
+
+  useEffect(() => {
+    setFilterParam({
+      ...filterParam,
+      column: filterOptions[0],
+    });
+  }, [btn]);
 
   return (
     <div>
@@ -107,6 +117,24 @@ function Table() {
         >
           Filtrar
         </button>
+      </div>
+      <div>
+        {
+          filterByNumericValues.map((f) => (
+            <p
+              key={ f.column }
+              data-testid="filter"
+            >
+              {f.column}
+              {' '}
+              {f.comparison}
+              {' '}
+              {f.value}
+              {' '}
+              <button type="button">X</button>
+            </p>
+          ))
+        }
       </div>
       <table>
         <tr>
