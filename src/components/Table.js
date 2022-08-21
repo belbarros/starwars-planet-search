@@ -11,8 +11,10 @@ function Table() {
   } = useContext(SWContext);
   //   console.log(data);
 
-  const [filterOptions, setFilterOptions] = useState(['population',
-    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+  const filterOptionsList = ['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+
+  const [filterOptions, setFilterOptions] = useState(filterOptionsList);
 
   const [filterParam, setFilterParam] = useState(
     {
@@ -46,11 +48,6 @@ function Table() {
     ]);
 
     setFilterOptions(filterOptions.filter((option) => filterParam.column !== option));
-    console.log(filterOptions);
-    // setFilterParam({
-    //   ...filterParam,
-    //   column: filterOptions[0],
-    // });
   };
 
   useEffect(() => {
@@ -59,6 +56,17 @@ function Table() {
       column: filterOptions[0],
     });
   }, [btn]);
+
+  const handleDeleteOne = (b) => {
+    setFilterByNumericValues(filterByNumericValues.filter((a) => a.column !== b.column));
+    setFilterOptions([...filterOptions, b.column]);
+    return filterByNumericValues;
+  };
+
+  const handleDeleteAll = () => {
+    setFilterByNumericValues([]);
+    setFilterOptions(filterOptionsList);
+  };
 
   return (
     <div>
@@ -117,6 +125,14 @@ function Table() {
         >
           Filtrar
         </button>
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ handleDeleteAll }
+        >
+          Deletar Todos
+
+        </button>
       </div>
       <div>
         {
@@ -131,7 +147,7 @@ function Table() {
               {' '}
               {f.value}
               {' '}
-              <button type="button">X</button>
+              <button type="button" onClick={ () => handleDeleteOne(f) }>X</button>
             </p>
           ))
         }
