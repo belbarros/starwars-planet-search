@@ -11,6 +11,12 @@ function Table() {
   } = useContext(SWContext);
   //   console.log(data);
 
+  // const filterOptions = ['population', 'orbital_period', 'diameter',
+  // 'rotation_period', 'surface_water'];
+
+  const [filterOptions, setFilterOptions] = useState(['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+
   const [filterParam, setFilterParam] = useState(
     {
       column: 'population',
@@ -40,6 +46,8 @@ function Table() {
       ...filterByNumericValues,
       filterParam,
     ]);
+    setFilterOptions(filterOptions.filter((option) => filterParam.column !== option));
+    // console.log(filterOptions);
   };
 
   return (
@@ -64,11 +72,9 @@ function Table() {
             column: target.value,
           }) }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {
+            filterOptions.map((o) => (<option key={ o } value={ o }>{ o }</option>))
+          }
         </select>
 
         <select
