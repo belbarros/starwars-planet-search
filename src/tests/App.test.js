@@ -57,14 +57,19 @@ test('number simulation', () => {
 
   userEvent.selectOptions(columnFilter, 'population');
   userEvent.selectOptions(comparisonFilter, 'maior que');
-  userEvent.type(valueFilter, '1000');
+  userEvent.type(valueFilter, '10000');
   userEvent.click(filterBtn);
 
   expect(screen.getByTestId('filter')).toBeInTheDocument();
 
   userEvent.selectOptions(columnFilter, 'diameter');
-  userEvent.selectOptions(comparisonFilter, 'maior que');
-  userEvent.type(valueFilter, '1000');
+  userEvent.selectOptions(comparisonFilter, 'menor que');
+  userEvent.type(valueFilter, '118000');
+  userEvent.click(filterBtn);
+
+  userEvent.selectOptions(columnFilter, 'orbital_period');
+  userEvent.selectOptions(comparisonFilter, 'igual a');
+  userEvent.type(valueFilter, '304');
   userEvent.click(filterBtn);
 });
 
@@ -75,6 +80,40 @@ test('name simulation', () => {
   const ooPlanet = 'Tatooine';
 
   userEvent.type(filterByName, 'o');
+});
 
-  expect(screen.getByRole('cell', { name: /Hoth/i })).toBeDefined();
+test('delete one simulation', () => {
+  render(<SWProvider><App /></SWProvider>)
+
+  const columnFilter = screen.getByTestId('column-filter');
+  const comparisonFilter = screen.getByTestId('comparison-filter');
+  const valueFilter = screen.getByTestId('value-filter');
+  const filterBtn = screen.getByTestId('button-filter');
+  const deleteBtn = screen.getByTestId('button-remove-filters');
+
+  userEvent.selectOptions(columnFilter, 'population');
+  userEvent.selectOptions(comparisonFilter, 'maior que');
+  userEvent.type(valueFilter, '10000');
+  userEvent.click(filterBtn);
+
+  expect(screen.getByRole('button', { name: /x/i })).toBeDefined();
+
+  userEvent.click(screen.getByRole('button', { name: /x/i }));
+});
+
+test('delete all simulation', () => {
+  render(<SWProvider><App /></SWProvider>)
+
+  const columnFilter = screen.getByTestId('column-filter');
+  const comparisonFilter = screen.getByTestId('comparison-filter');
+  const valueFilter = screen.getByTestId('value-filter');
+  const filterBtn = screen.getByTestId('button-filter');
+  const deleteBtn = screen.getByTestId('button-remove-filters');
+
+  userEvent.selectOptions(columnFilter, 'population');
+  userEvent.selectOptions(comparisonFilter, 'maior que');
+  userEvent.type(valueFilter, '10000');
+  userEvent.click(filterBtn);
+
+  userEvent.click(deleteBtn);
 });
